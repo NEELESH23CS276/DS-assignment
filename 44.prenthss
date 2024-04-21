@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Node structure for the stack
+typedef struct Node {
+    char data;
+    struct Node* next;
+} Node;
+
+// Stack structure
+typedef struct Stack {
+    Node* top;
+} Stack;
+
+// Function to initialize a new stack
+Stack* create_stack() {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->top = NULL;
+    return stack;
+}
+
+// Function to push a character onto the stack
+void push(Stack* stack, char data) {
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->data = data;
+    new_node->next = stack->top;
+    stack->top = new_node;
+}
+
+// Function to pop a character from the stack
+char pop(Stack* stack) {
+    if (stack->top == NULL) {
+        printf("Stack Underflow: Trying to pop from an empty stack\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Node* temp = stack->top;
+    char data = temp->data;
+    stack->top = temp->next;
+    free(temp);
+    return data;
+}
+
+// Function to check if a string of parentheses is valid
+bool is_valid_parentheses(const char* s) {
+    Stack* stack = create_stack();
+    int len = strlen(s);
+
+    for (int i = 0; i < len; i++) {
+        char current = s[i];
+
+        if (current == '(' || current == '[' || current == '{') {
+            push(stack, current);
+        } else if (current == ')' || current == ']' || current == '}') {
+            if (stack->top == NULL) {
+                return false;  // No matching opening parenthesis
+            }
+
+            char top_char = pop(stack);
+
+            // Check if the popped opening parenthesis matches the current closing parenthesis
+            if ((current == ')' && top_char != '(') ||
+                (current == ']' && top_char != '[') ||
+                (current == '}' && top_char != '{')) {
+                return false;  // Mismatched parentheses
+            }
+        }
+    }
+
+    // After processing all characters, stack should be empty for valid parentheses
+    return stack->top == NULL;
+}
+
+// Main function to test the validity of parentheses
+int main() {
+    const char* str1 = "{[()]}";
+    const char* str2 = "{[(])}";
+    const char* str3 = "{{{";
+
+    printf("%s is %s\n", str1, is_valid_parentheses(str1) ? "valid" : "invalid");
+    printf("%s is %s\n", str2, is_valid_parentheses(str2) ? "valid" : "invalid");
+    printf("%s is %s\n", str3, is_valid_parentheses(str3) ? "valid" : "invalid");
+
+    return 0;
+}

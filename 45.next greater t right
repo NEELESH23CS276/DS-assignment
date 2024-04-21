@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure to represent elements and their indices
+typedef struct {
+    int value;
+    int index;
+} Element;
+
+// Node structure for the stack
+typedef struct Node {
+    Element data;
+    struct Node* next;
+} Node;
+
+// Stack structure
+typedef struct {
+    Node* top;
+} Stack;
+
+// Function to initialize a new stack
+Stack* create_stack() {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    stack->top = NULL;
+    return stack;
+}
+
+// Function to check if the stack is empty
+int is_empty(Stack* stack) {
+    return stack->top == NULL;
+}
+
+// Function to push an element onto the stack
+void push(Stack* stack, Element elem) {
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->data = elem;
+    new_node->next = stack->top;
+    stack->top = new_node;
+}
+
+// Function to pop an element from the stack
+Element pop(Stack* stack) {
+    if (is_empty(stack)) {
+        // Stack underflow (this case shouldn't occur if used correctly)
+        exit(EXIT_FAILURE);
+    }
+    
+    Node* temp = stack->top;
+    Element elem = temp->data;
+    stack->top = temp->next;
+    free(temp);
+    return elem;
+}
+
+// Function to find the next greater element to the right
+void next_greater_to_right(int arr[], int n) {
+    Stack* stack = create_stack();
+    int result[n]; // Array to store the next greater elements
+
+    // Traverse the array from right to left
+    for (int i = n - 1; i >= 0; i--) {
+        Element current = { arr[i], i };
+
+        // Pop elements from the stack which are less than or equal to the current element
+        while (!is_empty(stack) && stack->top->data.value <= arr[i]) {
+            pop(stack);
+        }
+
+        if (is_empty(stack)) {
+            // If stack is empty, no greater element to the right
+            result[i] = -1;
+        } else {
+            // Top of stack is the next greater element
+            result[i] = stack->top->data.value;
+        }
+
+        // Push the current element onto the stack
+        push(stack, current);
+    }
+
+    // Print the result array
+    printf("Next Greater Element to the Right:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%d -> %d\n", arr[i], result[i]);
+    }
+
+    // Free memory allocated for the stack
+    while (!is_empty(stack)) {
+        pop(stack);
+    }
+    free(stack);
+}
+
+// Main function to test the next_greater_to_right function
+int main() {
+    int arr[] = {4, 5, 2, 10, 8};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    next_greater_to_right(arr, n);
+
+    return 0;
+}

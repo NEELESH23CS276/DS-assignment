@@ -1,0 +1,75 @@
+class Stack:
+    def __init__(self, max_size):
+        self.max_size = max_size  #Maximum size of the stack
+        self.array = []            #List to store stack elements
+        self.top = -1              #Index of the top element (-1 means stack is empty)
+
+    def is_empty(self):
+        return self.top == -1
+
+    def is_full(self):
+        return self.top == self.max_size - 1
+
+    def push(self, value):
+        if self.is_full():
+            print("Stack Overflow: Cannot push into a full stack")
+        else:
+            self.top += 1
+            self.array.append(value)
+
+    def pop(self):
+        if self.is_empty():
+            print("Stack Underflow: Cannot pop from an empty stack")
+            return None
+        else:
+            item = self.array.pop()
+            self.top -= 1
+            return item
+
+    def peek(self):
+        if self.is_empty():
+            print("Stack is empty")
+            return None
+        else:
+            return self.array[self.top]
+
+    def size(self):
+        return self.top + 1
+
+
+# Example usage:
+stack = Stack(max_size=5)
+
+print("Pushing elements onto the stack:")
+stack.push(1)
+stack.push(2)
+stack.push(3)
+stack.push(4)
+stack.push(5)
+
+print("Current stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPopping elements from the stack:")
+print(stack.pop())  # 5
+print(stack.pop())  # 4
+
+print("\nCurrent stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPushing more elements onto the stack:")
+stack.push(6)
+stack.push(7)
+
+print("\nCurrent stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPopping all elements from the stack:")
+print(stack.pop())  # 7
+print(stack.pop())  # 6
+print(stack.pop())  # 3
+print(stack.pop())  # 2
+print(stack.pop())  # 1
+
+print("\nCurrent stack size:", stack.size())
+print("Is the stack empty?", stack.is_empty())

@@ -1,0 +1,78 @@
+class Node:
+    def __init__(self, value=None):
+        self.value = value
+        self.next = None
+
+class Stack:
+    def __init__(self):
+        self.top = None  # Initialize an empty stack
+
+    def is_empty(self):
+        return self.top is None
+
+    def push(self, value):
+        new_node = Node(value)
+        new_node.next = self.top
+        self.top = new_node
+
+    def pop(self):
+        if self.is_empty():
+            print("Stack Underflow: Cannot pop from an empty stack")
+            return None
+        else:
+            popped_value = self.top.value
+            self.top = self.top.next
+            return popped_value
+
+    def peek(self):
+        if self.is_empty():
+            print("Stack is empty")
+            return None
+        else:
+            return self.top.value
+
+    def size(self):
+        current = self.top
+        count = 0
+        while current:
+            count += 1
+            current = current.next
+        return count
+
+
+# Example usage:
+stack = Stack()
+
+print("Pushing elements onto the stack:")
+stack.push(1)
+stack.push(2)
+stack.push(3)
+stack.push(4)
+stack.push(5)
+
+print("Current stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPopping elements from the stack:")
+print(stack.pop())  # 5
+print(stack.pop())  # 4
+
+print("\nCurrent stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPushing more elements onto the stack:")
+stack.push(6)
+stack.push(7)
+
+print("\nCurrent stack size:", stack.size())
+print("Top element of the stack:", stack.peek())
+
+print("\nPopping all elements from the stack:")
+print(stack.pop())  # 7
+print(stack.pop())  # 6
+print(stack.pop())  # 3
+print(stack.pop())  # 2
+print(stack.pop())  # 1
+
+print("\nCurrent stack size:", stack.size())
+print("Is the stack empty?", stack.is_empty())
